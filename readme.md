@@ -1,168 +1,375 @@
-## Updated `README.md` — Project 3 Complete (CLI + Web) 📝
-
-```markdown
 # 📄 PDF Q&A RAG Chatbot
 
-A retrieval-augmented generation (RAG) chatbot that answers questions from your PDF documents — with accurate source citations (filename + page number).
+A Retrieval-Augmented Generation (RAG) chatbot that answers questions from your PDF documents with accurate source citations (filename + page number).
 
-Built from scratch — no LangChain, no black boxes. Every embedding, chunk, and retrieval step is hand-coded to understand exactly how RAG works under the hood.
+Built from scratch to understand every stage of the RAG pipeline—without relying on LangChain abstractions. This project demonstrates document ingestion, chunking, embeddings, vector search, retrieval, and LLM-powered answer generation.
 
-## 🚀 Live Demo
+---
 
-- **Web App:** _coming soon_
-- **Backend API:** _coming soon_
+## 🚀 Overview
 
-## 🧠 How It Works
+Upload one or more PDF documents and ask questions in natural language.
 
-```
+The chatbot:
+
+* Extracts text from PDFs
+* Splits content into overlapping chunks
+* Generates embeddings using Sentence Transformers
+* Stores vectors in ChromaDB
+* Retrieves the most relevant chunks using semantic search
+* Generates grounded answers using Groq LLM
+* Displays source citations with filename and page number
+
+---
+
+## 🧠 System Architecture
+
+```text
 PDF Upload (multiple PDFs supported)
-    ↓
-PyMuPDF extracts text page by page
-    ↓
-Text split into chunks (500 chars, 50 overlap)
-    ↓
-Sentence Transformers embed chunks (all-MiniLM-L6-v2)
-    ↓
-ChromaDB stores vectors + metadata (filename, page)
-    ↓
-User asks a question
-    ↓
-Question embedded → ChromaDB semantic search
-    ↓
-Top 3 relevant chunks retrieved
-    ↓
-Chunks + Question → Groq (llama-3.3-70b-versatile)
-    ↓
-Answer + Source citations ✅
+        │
+        ▼
+PyMuPDF Text Extraction
+        │
+        ▼
+Chunking (500 chars, 50 overlap)
+        │
+        ▼
+Sentence Transformers Embeddings
+(all-MiniLM-L6-v2)
+        │
+        ▼
+ChromaDB Vector Storage
+(filename + page metadata)
+        │
+        ▼
+User Question
+        │
+        ▼
+Question Embedding
+        │
+        ▼
+Semantic Similarity Search
+(Top-K Relevant Chunks)
+        │
+        ▼
+Retrieved Context + Question
+        │
+        ▼
+Groq LLM
+(llama-3.3-70b-versatile)
+        │
+        ▼
+Answer + Source Citations
 ```
+
+---
 
 ## ✨ Features
 
-- Multiple PDF upload with source tracking (filename + page)
-- Semantic search — finds meaning, not just keywords
-- Overlap chunking — no information lost at chunk boundaries
-- Faithful answers — says "I don't know" if not in the documents
-- Two interfaces: CLI (terminal) and Web (browser)
+### Document Processing
+
+* Multiple PDF upload support
+* Page-wise text extraction using PyMuPDF
+* Overlapping chunking strategy
+* Metadata tracking for source attribution
+
+### Retrieval-Augmented Generation
+
+* Semantic search using vector embeddings
+* ChromaDB persistent vector storage
+* Top-k relevant chunk retrieval
+* Grounded responses based on retrieved context
+
+### Source Attribution
+
+* Displays source filename
+* Displays source page number
+* Improves answer transparency and trustworthiness
+
+### Interfaces
+
+* Command Line Interface (CLI)
+* Modern Web Interface
+* FastAPI Backend
+* Vanilla HTML/CSS/JavaScript Frontend
+
+### Reliability
+
+* Prevents hallucinations by restricting answers to retrieved context
+* Returns fallback responses when information is unavailable
+
+---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| PDF Loading | PyMuPDF |
-| Chunking | Custom overlap strategy |
-| Embeddings | Sentence Transformers (all-MiniLM-L6-v2) |
-| Vector DB | ChromaDB (persistent) |
-| LLM | Groq (llama-3.3-70b-versatile) |
-| Backend | FastAPI |
-| Frontend | HTML / CSS / JavaScript |
-| Deployment | Railway (backend) + Vercel (frontend) |
+| Layer                | Technology              |
+| -------------------- | ----------------------- |
+| Programming Language | Python                  |
+| PDF Processing       | PyMuPDF                 |
+| Embeddings           | Sentence Transformers   |
+| Embedding Model      | all-MiniLM-L6-v2        |
+| Vector Database      | ChromaDB                |
+| LLM Provider         | Groq                    |
+| LLM Model            | llama-3.3-70b-versatile |
+| Backend API          | FastAPI                 |
+| Frontend             | HTML, CSS, JavaScript   |
+| Deployment           | Railway + Vercel        |
 
-## 📁 Project Structure
+---
 
-```
+## 📂 Project Structure
+
+```text
 PDF-Q-A-Chatbot/
 │
 ├── frontend/
-│   ├── index.html      # Web UI
-│   ├── style.css        # Styling
-│   └── script.js         # Upload + chat logic
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
 │
-├── pdf_loader.py        # PDF loading + chunking
-├── vector_store.py       # ChromaDB operations
-├── rag_engine.py          # Retrieval + LLM
-├── main.py                 # CLI interface
-├── backend.py              # FastAPI server (web interface)
+├── pdf_loader.py
+├── vector_store.py
+├── rag_engine.py
+├── backend.py
+├── main.py
 │
 ├── requirements.txt
-├── Procfile
+├── .env
 ├── .gitignore
+├── Procfile
 └── README.md
 ```
 
-## ⚙️ Setup
+### File Description
 
-### 1. Clone the repo
+| File            | Purpose                         |
+| --------------- | ------------------------------- |
+| pdf_loader.py   | PDF extraction and chunking     |
+| vector_store.py | ChromaDB storage operations     |
+| rag_engine.py   | Retrieval and answer generation |
+| backend.py      | FastAPI server                  |
+| main.py         | CLI chatbot                     |
+| frontend/       | Web application                 |
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone Repository
+
 ```bash
-git clone https://github.com/Sk-husamuddin/PDF-Q-A-Chatbot
+git clone https://github.com/Sk-husamuddin/PDF-Q-A-Chatbot.git
+
 cd PDF-Q-A-Chatbot
 ```
 
-### 2. Create virtual environment
+### 2. Create Virtual Environment
+
+Windows:
+
 ```bash
 python -m venv venv
+
 venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+Linux / macOS:
+
+```bash
+python3 -m venv venv
+
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Create `.env` file
-```
+### 4. Configure Environment Variables
+
+Create a `.env` file:
+
+```env
 GROQ_API_KEY=your_groq_api_key_here
 ```
 
-## 💬 Usage
+---
 
-### Option A — CLI version
+## 💻 Running the Application
+
+### Option A — CLI Version
+
 ```bash
 python main.py
 ```
-```
-Enter PDF path or 'done' to start chatting: document.pdf
-✅ Extracted 12 chunks from document.pdf
-✅ Added 12 chunks from document.pdf
 
-Enter PDF path or 'done' to start chatting: done
+Example:
+
+```text
+Enter PDF path or 'done' to start chatting:
+resume.pdf
+
+✅ Extracted 15 chunks from resume.pdf
+✅ Added 15 chunks from resume.pdf
+
+Enter PDF path or 'done' to start chatting:
+done
 
 Chatbot Ready!!
-========================================
-You: What is machine learning?
+===================================
 
-Answer: Machine Learning is a subset of AI that
-enables computers to learn from data...
+You: What skills does the candidate have?
+
+Answer:
+The candidate has experience in Python, FastAPI,
+Machine Learning, and Generative AI.
 
 Sources:
- 📄 document.pdf (page 2)
+📄 resume.pdf (page 1)
 ```
 
-### Option B — Web version
+---
+
+### Option B — Web Version
+
+Start FastAPI:
+
 ```bash
 uvicorn backend:app --reload
 ```
-Then open `frontend/index.html` in your browser.
+
+Open:
+
+```text
+frontend/index.html
+```
+
+in your browser.
+
+---
+
+## 📸 Screenshots
+
+### Upload PDF
+
+*Add screenshot here*
+
+```text
+screenshots/upload.png
+```
+
+### Chat Interface
+
+*Add screenshot here*
+
+```text
+screenshots/chat.png
+```
+
+### Source Citations
+
+*Add screenshot here*
+
+```text
+screenshots/sources.png
+```
+
+---
+
+## 🔍 Key Learning Outcomes
+
+Through this project I learned:
+
+* Retrieval-Augmented Generation (RAG)
+* Semantic Search
+* Vector Databases
+* Text Chunking Strategies
+* Embeddings and Similarity Search
+* Source Attribution
+* FastAPI Development
+* REST APIs
+* Frontend-Backend Integration
+* LLM Integration using Groq
+* End-to-End AI Application Development
+
+---
 
 ## 🌐 Deployment
 
+### Backend
+
+Deploy FastAPI application on Railway.
+
+Set:
+
+```env
+GROQ_API_KEY=your_api_key
 ```
-Backend  → Railway
-           (set GROQ_API_KEY as environment variable)
 
-Frontend → Vercel
-           (update BACKEND_URL in script.js to Railway URL)
+as an environment variable.
+
+### Frontend
+
+Deploy frontend on Vercel.
+
+Update:
+
+```javascript
+const BACKEND_URL = "YOUR_RAILWAY_URL"
 ```
 
-## 📍 Part of GenAI Learning Journey
+inside `script.js`.
 
-This is **Project 3** of a structured 3-month GenAI learning roadmap.
+---
 
-| Project | Description | Status |
-|---------|-------------|--------|
-| Project 1 | Prompt System Designer | ✅ |
-| Project 2 | Terminal Chatbot | ✅ |
-| Project 2.5 | Live Web Chatbot | ✅ |
-| **Project 3** | **PDF Q&A RAG Chatbot** | ✅ |
-| Project 4 | Research Agent | 🔄 Coming Soon |
-| Project 5 | Capstone App | 🔄 Coming Soon |
+## 🚀 Future Improvements
+
+* Drag and drop PDF upload
+* Upload multiple PDFs in a single request
+* Streaming LLM responses
+* Chat history persistence
+* Hybrid Search (Keyword + Semantic)
+* Docker Containerization
+* User Authentication
+* PDF Preview Support
+* Reranking Models
+* Conversational Memory
+
+---
+
+## 📍 GenAI Learning Roadmap
+
+This project is part of a structured Generative AI learning journey.
+
+| Project     | Description                | Status         |
+| ----------- | -------------------------- | -------------- |
+| Project 1   | Prompt System Designer     | ✅ Completed    |
+| Project 2   | Terminal Chatbot           | ✅ Completed    |
+| Project 2.5 | Full-Stack Web Chatbot     | ✅ Completed    |
+| Project 3   | PDF Q&A RAG Chatbot        | ✅ Completed    |
+| Project 4   | Research Agent             | 🔄 Coming Soon |
+| Project 5   | Capstone GenAI Application | 🔄 Coming Soon |
+
+---
 
 ## 👨‍💻 Author
 
 **Shaik Husamuddin**
-B.Tech CSE/AI-ML — Vijayawada, Andhra Pradesh
 
-- GitHub: [Sk-husamuddin](https://github.com/Sk-husamuddin)
-- Learning Journey: [genai-learning-journey](https://github.com/Sk-husamuddin/genai-learning-journey)
-```
+B.Tech Computer Science & Engineering
+
+GitHub:
+https://github.com/Sk-husamuddin
+
+GenAI Learning Journey:
+https://github.com/Sk-husamuddin/genai-learning-journey
 
 ---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+Feel free to fork, modify, and build upon it for educational purposes.
