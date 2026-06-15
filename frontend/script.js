@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://ourselves-registered-christopher-stuart.trycloudflare.com"
+const BACKEND_URL = "http://localhost:8000"
 
 const pdfInput = document.getElementById("pdfInput")
 const uploadBtn = document.getElementById("uploadBtn")
